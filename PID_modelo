@@ -1,0 +1,56 @@
+ /*  
+ ****************************
+Universidade São Judas Tadeu
+CheckPoint A3
+UC: Microeletrônica e Sistemas Integrados
+Graduação em Engenharia Eletrônica
+ALunos: Nathan Leite, Lucas Teixeira, Vitor Lavina
+****************************************************
+*/
+
+
+/*               Mapeamento de Hardwere          */
+
+#include <PID_v1.h> // chamo a biblibiotéca PID
+
+
+// Definição dos pinos de entrada e saída (Arduíno)
+
+#define PIN_INPUT A1
+#define PIN_OUTPUT 5
+
+// Criação das variáveis de controle
+double Setpoint, coord, pwm_servo;  // Input - Coordenada da posição da bola pela câmera (coord)
+                                    // Output - PWM correspondente a posição do servo (pwm_servo)
+
+// Criação de um objeto PID
+
+double Kp=4,Ki=3,Kd=2;  // Ganhos encontrados pelo MathLAb.
+  
+PID myPID(&coord, &pwm_servo, &Setpoint, Kp, Ki, Kd, DIRECT);
+
+
+void setup() {
+
+
+  coord = analogRead(PIN_INPUT); // leitura da entrada (INPUT)
+  Setpoint = 100; //definição do setpoint ex: centro do prato.
+  
+  //função que define myPID como automático
+  myPID.SetMode(AUTOMATIC);
+  
+
+} //end setup
+
+void loop() {
+  // Leitura da entrada
+  analogRead(PIN_INPUT);
+
+  // Função que executa o PID.
+  myPID.Compute();
+
+  // Escreve a saída pwm no pino A1
+  analogWrite(PIN_OUTPUT, pwm_servo);
+  
+
+}  //end loop
