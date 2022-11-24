@@ -1,0 +1,79 @@
+ /*  
+ ****************************
+Universidade São Judas Tadeu
+CheckPoint A3
+UC: Microeletrônica e Sistemas Integrados
+Graduação em Engenharia Eletrônica
+ALunos: Nathan Leite, Lucas Teixeira, Vitor Lavina
+****************************************************
+*/
+
+
+/*               Mapeamento de Hardwere          */
+
+#include <PID_v1.h> //  biblibiotéca PID
+#include <Servo.h> // biblioteca servo
+
+static const int servoPin1 = 25; // definição do pino 4 para saída do servo 1
+static const int servoPin2 = 26; // definição do pino 3 para saída do servo 2
+
+Servo servo1;
+Servo servo2;
+
+int pos1, pos2;
+
+
+// Criação das variáveis de controle
+double Setpoint, coordx, coordy, outputx, outputy;  // Input - Coordenada da posição da bola pela câmera (coord)
+                                                    // Output - PWM correspondente a posição do servo (pwm_servo)
+
+// Criação de um objeto PID
+
+double Kp1=4,Ki1=3,Kd1=2; // Ganhos encontrados pelo MathLAb.*******
+double Kp2=4,Ki2=3,Kd2=2;
+  
+PID myPID1 (&coordx, &outputx, &Setpoint, Kp1, Ki1, Kd1, DIRECT);
+
+PID myPID2 (&coordy, &outputy, &Setpoint, Kp2, Ki2, Kd2, DIRECT);
+
+
+
+
+
+void setup() {
+
+// leitura da entrada (INPUT) (Com Blouetooth). a definir*********
+  coordx = analogRead(12); 
+  coordy = analogRead(13);
+  
+  Setpoint = 100; //definição do setpoint ex: centro do prato. a definir *************
+  
+  //função que define myPID como automático
+  myPID1.SetMode(AUTOMATIC);
+  myPID2.SetMode(AUTOMATIC);
+
+ // iniciação dos servos
+  servo1.attach(servoPin1);
+  servo2.attach(servoPin2);
+
+} //end setup
+
+void loop() {
+  
+  // Leitura da entrada a definir
+  analogRead(12);
+  analogRead(13);
+
+  // Função que executa o PID.
+  myPID1.Compute();
+  myPID2.Compute();
+
+  // mapeamento do valor lido e processado para angulação do servo
+  pos1 = map(outputx, 0, 400, 0, 180);
+  pos2 = map(outputy, 0, 400, 0, 180);
+
+ // escrevendo no servo os ângulos
+  servo1.write(pos1);
+  servo2.write(pos1);
+
+}  //end loop
