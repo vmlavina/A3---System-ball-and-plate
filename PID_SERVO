@@ -31,8 +31,8 @@ BluetoothSerial SerialBT;
 
 
 
-static const int servoPin1 = 25; // definição do pino 4 para saída do servo 1
-static const int servoPin2 = 26; // definição do pino 3 para saída do servo 2
+static const int servoPin1 = 25; // definição do pino 25 para saída do servo 1
+static const int servoPin2 = 26; // definição do pino 26 para saída do servo 2
 
 Servo servo1;
 Servo servo2;
